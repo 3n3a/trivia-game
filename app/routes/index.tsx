@@ -35,7 +35,9 @@ const Index = () => {
 
   return (
     <Container maxW="md" height="95vh">
-      <Form method="post" action="/play">
+      <Form method="post" action="/play" style={{
+        height: "100%"
+      }}>
         <VStack height="full" align="stretch" justifyContent="space-between">
           <VStack spacing={8}>
             <Box bg="white" w="100%" paddingTop={16} color="black" fontSize={40}>
