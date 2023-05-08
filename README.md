@@ -1,4 +1,4 @@
-# Chakra UI Example
+# M326 - Quiz Applikation
 
 In this setup we will setup Chakra UI with Remix.
 
