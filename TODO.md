@@ -9,7 +9,7 @@
 - [x] Fix: Question overflowing Box
 - [x] Fix: Answers disappeearing
 - [ ] Fix: Add Exit Button on Game Screen
-- [ ] Fix: Add Question Counter on Game Screen
+- [x] Fix: Add Question Counter on Game Screen
 - [x] Fix: Save the Users Preferences for Game Options
   - [x] Fix: Add Restart Button to Finished Screen (with same options)
   - [x] Fix: Add Back to Start Button (with standard options)
