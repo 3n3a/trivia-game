@@ -1,13 +1,6 @@
 import { ActionArgs, LoaderArgs, json, redirect } from "@remix-run/node";
 import { createGameSession } from "~/models/game.server";
 
-// function createGameSession(formData: any) {
-//   const category = formData.get("category");
-//   const questions = formData.get("questions");
-//   console.log("Session", category, "qs: ", questions);
-//   return { id: "123" };
-// }
-
 export const loader = async ({}: LoaderArgs) => {
   return json({})
 }

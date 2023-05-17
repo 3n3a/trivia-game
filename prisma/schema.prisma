@@ -13,4 +13,6 @@ model GameSession {
     opentdb_token    String
     score            Int    @default(0)
     current_question Int    @default(0)
+    category_id      Int
+    amount           Int
 }

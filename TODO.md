@@ -4,12 +4,12 @@
 - [x] Create the Game PAge
 - [x] Create the Backend implementation for Game Session
 - [x] Create the Question getting / checking on Backend
-- [ ] Create Finished Screen
+- [x] Create Finished Screen
 - [ ] Create Joker Button, Skip Question and Add a Point
-- [ ] Fix: Question overflowing Box
-- [ ] Fix: Answers disappeearing
+- [x] Fix: Question overflowing Box
+- [x] Fix: Answers disappeearing
 - [ ] Fix: Add Exit Button on Game Screen
 - [ ] Fix: Add Question Counter on Game Screen
-- [ ] Fix: Save the Users Preferences for Game Options
-- [ ] Fix: Add Restart Button to Finished Screen (with same options)
-- [ ] Fix: Add Back to Start Button (with standard options)
+- [x] Fix: Save the Users Preferences for Game Options
+  - [x] Fix: Add Restart Button to Finished Screen (with same options)
+  - [x] Fix: Add Back to Start Button (with standard options)

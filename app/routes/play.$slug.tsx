@@ -19,11 +19,17 @@ export const loader = async ({ params }: LoaderArgs) => {
   const slug = params.slug;
   if (slug) {
     const session = await getGameSession(slug);
-    if (!session) return json({});
-    session.questions = JSON.parse(session.questions);
+    if (!session) return redirect('/');
+
     if (session.current_question >= session.questions.length) {
       return redirect('/play/finished/' + slug)
     }
+
+    for (const question of session.questions) {
+      delete question.correct_answer
+      delete question.incorrect_answers
+    }
+
     return json(session);
   }
   return json({});
@@ -33,22 +39,30 @@ export const action = async ({ params, request }: ActionArgs) => {
   const slug = params.slug;
   if (slug) {
     const session = await getGameSession(slug);
-    if (!session) return json({});
-    session.questions = JSON.parse(session.questions);
+    if (!session) return redirect('/');
+
     const formData = await request.formData();
     const answer = String(formData.get("answer"));
-    //  @ts-ignore
     const isCorrect = session.questions[session.current_question].correct_answer === answer
 
     const updatedSession = await nextQuestion(slug, isCorrect)
-    updatedSession.questions = JSON.parse(updatedSession.questions);
-    if (updatedSession.current_question >= updatedSession.questions.length) {
+    if (!updatedSession) {
+      return redirect('/')
+    }
+
+    if (updatedSession!.current_question >= updatedSession!.questions.length) {
       return redirect('/play/finished/' + slug)
     }
-    if (isCorrect) {
-      return json({ message: { is_correct: true }, ...updatedSession });
+
+    for (const question of updatedSession!.questions) {
+      delete question.correct_answer
+      delete question.incorrect_answers
     }
-    return json({ message: { is_correct: false }, ...updatedSession });
+
+    if (isCorrect) {
+      return json({ message: { is_correct: true, text: 'Your answer was correct!' }, ...updatedSession });
+    }
+    return json({ message: { is_correct: false, text: 'Your answer was wrong!' }, ...updatedSession });
   }
   return redirect('/')
 };
@@ -62,24 +76,17 @@ const Play = () => {
   return (
     <Form method="post">
       <Container maxW="md" height="95vh" paddingTop={16}>
-        {gameSession.hasOwnProperty("message") ? (
-          gameSession.message.is_correct ? (
-            <Alert status="success">
+        {gameSession.hasOwnProperty("message") ? 
+            <Alert status={gameSession.message.is_correct ? 'success' : 'error'}>
               <AlertIcon />
-              Your answer is correct!
+              {gameSession.message.text}
             </Alert>
-          ) : (
-            <Alert status="error">
-              <AlertIcon />
-              Your answer was incorrect!
-            </Alert>
-          )
-        ) : null}
-        <VStack height="full" align="stretch" justifyContent="space-between">
+           : null}
+        <VStack height="full" align="stretch" justifyContent="space-evenly">
           <Center
             bgColor="gray.200"
             borderRadius="xl"
-            height="64"
+            minHeight="64"
             paddingX="10"
             paddingY="20"
           >
@@ -90,7 +97,9 @@ const Play = () => {
           <VStack align="stretch" justifyContent="space-evenly" spacing="4">
             {activeQuestion.answers!.map((q: any) => (
               <Button key={q} size="lg" type="submit" name="answer" value={q}>
-                {decodeURIComponent(q)}
+                <Text width="full" textOverflow="ellipsis" overflow="clip">
+                  {decodeURIComponent(q)}
+                </Text>
               </Button>
             ))}
           </VStack>
