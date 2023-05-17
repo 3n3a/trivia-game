@@ -9,10 +9,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { ActionArgs, LoaderArgs, redirect } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs} from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import { useRef, useState } from "react";
 import { getGameSession, nextQuestion } from "~/models/game.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
@@ -54,24 +54,13 @@ export const action = async ({ params, request }: ActionArgs) => {
 };
 
 const Play = () => {
-  const [answer, setAnswer] = useState("");
   const actionData = useActionData<typeof action>();
   const loaderData = useLoaderData<typeof loader>();
   const gameSession: any = actionData ?? loaderData
   const activeQuestion = gameSession.questions[gameSession.current_question];
-  const formRef = useRef(null);
-
-  const answerQuestion = (value: string) => {
-    setAnswer(value);
-    setTimeout(() => {
-      // @ts-ignore
-      formRef.current!.submit();
-    }, 200);
-  };
 
   return (
-    <Form method="post" ref={formRef}>
-      <Input hidden value={answer} onChange={() => {}} name="answer" />
+    <Form method="post">
       <Container maxW="md" height="95vh" paddingTop={16}>
         {gameSession.hasOwnProperty("message") ? (
           gameSession.message.is_correct ? (
@@ -100,7 +89,7 @@ const Play = () => {
           </Center>
           <VStack align="stretch" justifyContent="space-evenly" spacing="4">
             {activeQuestion.answers!.map((q: any) => (
-              <Button key={q} size="lg" onClick={() => answerQuestion(q)}>
+              <Button key={q} size="lg" type="submit" name="answer" value={q}>
                 {decodeURIComponent(q)}
               </Button>
             ))}
