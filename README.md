@@ -4,20 +4,27 @@ In this setup we will setup Chakra UI with Remix.
 
 Please note that when adding Chakra UI to a TypeScript project, a minimum TypeScript version of `4.1.0` is required
 
-## Preview
+## Development
 
-Open this example on [CodeSandbox](https://codesandbox.com):
+1. Install Dependencies
 
-[![Open in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/remix-run/examples/tree/main/chakra-ui)
+    ```sh
+    npm i
+    ```
 
-## Example
+2. Configure the Environment (`.env`)
 
-This example shows how to use Chakra UI with Remix.
+    ```sh
+    echo 'DATABASE_URL="file:./data.db?connection_limit=1"' > .env
+    ```
 
-Check [app/root.tsx](./app/root.tsx) where Chakra UI is imported and provides context to the component tree.
+3. Start Development Server
 
-Uncomment the thrown error on `./app/root.tsx` to see how Chackra UI handles your styles graciously on `CatchBoundary`. Then, navigate a **Not Found** route (like `/admin`) to see `ErrorBoundary` in action.
+    ```sh
+    npm run dev
+    ```
 
 ## Related Links
 
-[Chakra UI](https://chakra-ui.com/guides/getting-started/remix-guide)
+* [Chakra UI](https://chakra-ui.com/guides/getting-started/remix-guide)
+* [Todo List](./TODO.md)
