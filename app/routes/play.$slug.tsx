@@ -95,21 +95,15 @@ const Play = () => {
             paddingY="20"
           >
             <Text fontSize="3xl" overflowWrap="anywhere">
-              {activeQuestion.question}
+              {decodeURIComponent(activeQuestion.question)}
             </Text>
           </Center>
           <VStack align="stretch" justifyContent="space-evenly" spacing="4">
-            {activeQuestion.incorrect_answers.map((q: any) => (
+            {activeQuestion.answers!.map((q: any) => (
               <Button key={q} size="lg" onClick={() => answerQuestion(q)}>
-                {q}
+                {decodeURIComponent(q)}
               </Button>
             ))}
-            <Button
-              size="lg"
-              onClick={() => answerQuestion(activeQuestion.correct_answer)}
-            >
-              {activeQuestion.correct_answer}
-            </Button>
           </VStack>
         </VStack>
       </Container>

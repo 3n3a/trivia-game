@@ -2,11 +2,21 @@ import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { URLSearchParams } from 'url';
 
+enum ResponseCode {
+    Success = 0,
+    NoResults = 1,
+    InvalidParameter = 2,
+    TokenNotFound = 3,
+    TokenEmpty = 4
+}
+
 type SessionToken = {
+    response_code: number;
+    response_message: string;
     token: string;
 }
 
-type Category = {
+export type Category = {
     id: number;
     name: string;
 }
@@ -22,6 +32,7 @@ type Question = {
     question: string;
     correct_answer: string;
     incorrect_answers: string[];
+    answers?: string[];
 };
 
 type Questions = {
@@ -86,10 +97,16 @@ export default class TriviaDb {
      * @param token token for getting unique questions
      * @param difficulty difficulty ("easy", "medium", "hard")
      * @param type typ of question ("multiple", "boolean")
+     * @param encoding Encode Type (urlLegacy, url3986, base64):
      * @returns list of question
      */
-    async getQuestions(amount: number, categoryId: number, token?: string, difficulty?: QuestionDifficulty, type?: QuestionType): Promise<Question[]> {
-        let urlParams = `amount=${amount}&category=${categoryId}`
+    async getQuestions(amount: number, categoryId: number, token?: string, difficulty?: QuestionDifficulty, type?: QuestionType, encoding: string = 'url3986'): Promise<Question[]> {
+        let urlParams = `amount=${amount}&encode=${encoding}`
+
+        // -1 is all categories => e.g just no category parameter
+        if (categoryId >= 0) {
+            urlParams += `&category=${categoryId}`
+        }
         if (difficulty != undefined) {
             urlParams += `&difficulty=${difficulty}`
         }

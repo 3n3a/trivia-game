@@ -17,7 +17,7 @@ export const meta: MetaFunction = () => ({
 
 function Document({
   children,
-  title = "App title",
+  title = "Trivia-Game",
 }: {
   children: React.ReactNode;
   title?: string;

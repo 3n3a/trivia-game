@@ -14,7 +14,7 @@ export const loader = async({ params }: LoaderArgs) => {
 }
 
 const Finsihed = () => {
-    const loaderData = useLoaderData<typeof loader>();
+    const loaderData = useLoaderData<typeof loader>() as {score: number, questions_count: number};
 
   return (
     <Container maxW="md" height="95vh" paddingTop={16}>

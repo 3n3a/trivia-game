@@ -4,13 +4,21 @@ import { prisma } from "~/db.server";
 
 const triviaDb = new TriviaDb()
 
+export async function getCategoriesList() {
+  return await triviaDb.getCategories()
+}
+
 export async function createGameSession(amount: number, categoryId: number) {
   const token = await triviaDb.getSessionToken()
-  const questions = await triviaDb.getQuestions(
+  let questions = await triviaDb.getQuestions(
     amount,
     categoryId,
     token
   )
+  for (let i = 0; i < questions.length; i++) {
+    let question = questions[i]
+    question.answers = [...question.incorrect_answers, question.correct_answer].sort(() => Math.random() - 0.5)
+  }
   return prisma.gameSession.create({
     data: {
       questions: JSON.stringify(questions),

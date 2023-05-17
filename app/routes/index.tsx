@@ -12,16 +12,28 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import { Form } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
+import { getCategoriesList } from "~/models/game.server";
+import type {Category} from "lib/triviadb/trivia"
+import { useState } from "react";
+
+export const loader = async () => {
+  return json(await getCategoriesList())
+}
 
 const Index = () => {
   const minQuestions = 10;
   const defaultQuestions = 20;
   const maxQuestions = 200;
 
+  const [loadingGame, setLoadingGame] = useState(false);
+
+  const categoriesList = useLoaderData<typeof loader>()
+
   return (
     <Container maxW="md" height="95vh">
-      <Form method="post" action="/play/new" style={{
+      <Form method="post" action="/play/new" onSubmit={() => setLoadingGame(true)} style={{
         height: "100%"
       }}>
         <VStack height="full" align="stretch" justifyContent="space-between">
@@ -31,8 +43,11 @@ const Index = () => {
             </Box>
             <FormControl>
               <FormLabel>Kategorie</FormLabel>
-              <Select name="category" placeholder="Wähle eine Kategorie...">
-                <option value="test1">Test 1</option>
+              <Select name="category" defaultValue="-1">
+                <option key="all" value='-1'>Alle Kategorien</option>
+                {
+                  categoriesList.map((category: Category) => <option key={category.id} value={category.id}>{category.name}</option>)
+                }
               </Select>
             </FormControl>
             <FormControl>
@@ -52,7 +67,7 @@ const Index = () => {
             </FormControl>
           </VStack>
           <Box>
-            <Button type="submit" pt={1} bgColor="tomato" size="lg" width="full">
+            <Button type="submit" pt={1} bgColor="tomato" size="lg" width="full" isLoading={loadingGame}>
               Spiel Starten
             </Button>
           </Box>
