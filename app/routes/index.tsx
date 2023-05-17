@@ -12,21 +12,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import { ActionArgs, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-
-function createGameSession(formData: any) {
-  const category = formData.get("category")
-  const questions = formData.get("questions")
-  console.log("Session", category, "qs: ", questions)
-  return {id: "123"}
-}
-
-export const action = async ({ request }: ActionArgs) => {
-  const formData = await request.formData();
-  const session = await createGameSession(formData);
-  return redirect(`/play/${session.id}`);
-}
 
 const Index = () => {
   const minQuestions = 10;
@@ -35,7 +21,7 @@ const Index = () => {
 
   return (
     <Container maxW="md" height="95vh">
-      <Form method="post" action="/play" style={{
+      <Form method="post" action="/play/new" style={{
         height: "100%"
       }}>
         <VStack height="full" align="stretch" justifyContent="space-between">
