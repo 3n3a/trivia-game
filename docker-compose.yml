@@ -2,7 +2,7 @@ version: "3.7"
 services:
   # in prod the db is on a separte server
   app:
-    image: 3n3a/trivia-game:1.0.0
+    image: 3n3a/trivia-game:1.0.1
     ports:
       - "3000:3000"
     env_file:

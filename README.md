@@ -51,13 +51,13 @@ Please note that when adding Chakra UI to a TypeScript project, a minimum TypeSc
 1. Build Image
 
     ```sh
-    docker build -t 3n3a/trivia-game:1.0.0 .
+    docker build -t 3n3a/trivia-game:1.0.1 .
     ```
 
 2. Publish Image to Docker Hub
 
     ```sh
-    docker push 3n3a/trivia-game:1.0.0
+    docker push 3n3a/trivia-game:1.0.1
     ```
 
 3. Configure the Environment
