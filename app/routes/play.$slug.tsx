@@ -11,8 +11,11 @@ import {
   Grid,
   GridItem,
   IconButton,
+  SimpleGrid,
   Text,
+  Tooltip,
   VStack,
+  chakra,
 } from "@chakra-ui/react";
 
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
@@ -20,7 +23,11 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { deductJoker, getGameSession, nextQuestion } from "~/models/game.server";
+import {
+  deductJoker,
+  getGameSession,
+  nextQuestion,
+} from "~/models/game.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const slug = params.slug;
@@ -54,8 +61,8 @@ export const action = async ({ params, request }: ActionArgs) => {
       session.questions[session.current_question].correct_answer === answer;
 
     if (answer === "use-joker") {
-      isCorrect = true
-      await deductJoker(slug)
+      isCorrect = true;
+      await deductJoker(slug);
     }
 
     const updatedSession = await nextQuestion(slug, isCorrect);
@@ -86,6 +93,15 @@ export const action = async ({ params, request }: ActionArgs) => {
   return redirect("/");
 };
 
+
+// Idk how safe this is, but like so it does not make additional get-requests when answer submitted :)
+export function shouldRevalidate({
+  actionResult,
+  defaultShouldRevalidate
+}: {actionResult: any, defaultShouldRevalidate: boolean}) {
+  return false
+}
+
 const Play = () => {
   const actionData = useActionData<typeof action>();
   const loaderData = useLoaderData<typeof loader>();
@@ -94,6 +110,8 @@ const Play = () => {
 
   const [isEndGame, setIsEndGame] = useState(false);
 
+  const PureButton = chakra("button", {});
+
   return (
     <Form method="post">
       <Grid
@@ -101,8 +119,8 @@ const Play = () => {
         maxW="md"
         h="95vh"
         paddingTop={16}
-        templateRows="1fr 5fr 2fr 5fr 1fr"
-        gap={3}
+        templateRows="2.5rem 1fr 1fr 3rem"
+        gap={10}
       >
         <GridItem>
           <Grid templateColumns="repeat(3, 1fr)" gap={6}>
@@ -116,31 +134,30 @@ const Play = () => {
             </GridItem>
             <GridItem>
               <Center h="full" justifyContent="end">
-                <IconButton
-                  isLoading={isEndGame}
-                  onClick={() => setIsEndGame(true)}
-                  as={Link}
-                  to="/"
-                  aria-label="Spiel Beenden"
-                  icon={<CloseIcon />}
-                  colorScheme="red"
-                >
-                  Spiel Beenden
-                </IconButton>
+                <Tooltip hasArrow label="Spiel Beenden">
+                  <IconButton
+                    isLoading={isEndGame}
+                    onClick={() => setIsEndGame(true)}
+                    as={Link}
+                    to="/"
+                    aria-label="Spiel Beenden"
+                    icon={<CloseIcon />}
+                    colorScheme="red"
+                  >
+                    Spiel Beenden
+                  </IconButton>
+                </Tooltip>
               </Center>
             </GridItem>
           </Grid>
         </GridItem>
         <GridItem>
-          <VStack
-            spacing={8}
-            height="full"
-            align="stretch"
-            justifyContent="space-between"
-          >
-            <Box h="20" py="10">
+          <Grid h="full" templateRows="5rem 1fr" rowGap={8}>
+            <GridItem>
+            <Box h="full">
               {gameSession.hasOwnProperty("message") ? (
                 <Alert
+                  h="full"
                   status={gameSession.message.is_correct ? "success" : "error"}
                 >
                   <AlertIcon />
@@ -148,16 +165,27 @@ const Play = () => {
                 </Alert>
               ) : null}
             </Box>
-            <Card>
-              <CardBody>
+            </GridItem>
+            <GridItem>
+            <Card h="full">
+              <CardBody as={Center}>
                 <Text fontSize="3xl" overflowWrap="anywhere">
                   {decodeURIComponent(activeQuestion.question)}
                 </Text>
               </CardBody>
             </Card>
-          </VStack>
+            </GridItem>
+          </Grid>
+          {/* <VStack
+            spacing={8}
+            height="full"
+            align="stretch"
+            justifyContent="space-between"
+          >
+            
+            
+          </VStack> */}
         </GridItem>
-        <GridItem></GridItem>
         <GridItem>
           <VStack
             height="full"
@@ -165,19 +193,23 @@ const Play = () => {
             justifyContent="flex-start"
             maxW="md"
           >
-            <VStack align="stretch" justifyContent="space-evenly" spacing="4">
+            <SimpleGrid columns={2} spacing={8} height="full">
               {activeQuestion.answers!.map((q: any) => (
-                <button key={q} type="submit" name="answer" value={q}>
-                  <Box
-                    w="full"
-                    bgColor="blue.500"
-                    color="white"
-                    padding={4}
-                    borderRadius={6}
-                    _hover={{
-                      backgroundColor: "blue.600",
-                    }}
-                  >
+                <Card
+                  as={PureButton}
+                  key={q}
+                  w="full"
+                  type="submit"
+                  name="answer"
+                  value={q}
+                  color="white"
+                  bgColor="blue.400"
+                  height="full"
+                  _hover={{
+                    backgroundColor: "blue.500",
+                  }}
+                >
+                  <CardBody as={Center}>
                     <Text
                       wordBreak="break-all"
                       inlineSize="full"
@@ -187,10 +219,10 @@ const Play = () => {
                     >
                       {decodeURIComponent(q)}
                     </Text>
-                  </Box>
-                </button>
+                  </CardBody>
+                </Card>
               ))}
-            </VStack>
+            </SimpleGrid>
           </VStack>
         </GridItem>
         <GridItem>
