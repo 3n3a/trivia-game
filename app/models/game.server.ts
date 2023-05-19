@@ -11,6 +11,7 @@ export type GameSession = {
   opentdb_token: string;
   score: number;
   current_question: number;
+  joker_count: number;
 }
 
 export async function getCategoriesList() {
@@ -31,6 +32,7 @@ export async function createGameSession(amount: number, categoryId: number) {
       opentdb_token: token,
       amount: amount,
       category_id: categoryId,
+      joker_count: 2,
     }
   })
 }
@@ -46,6 +48,20 @@ export async function nextQuestion(slug: string, wasCorrect: boolean) {
       },
       score: {
         increment: wasCorrect ? 1 : 0
+      }
+    }
+  })
+  return convertToGameSession(res)
+}
+
+export async function deductJoker(slug: string) {
+  const res = await prisma.gameSession.update({
+    where: {
+      slug
+    },
+    data: {
+      joker_count: {
+        decrement: 1
       }
     }
   })
@@ -70,7 +86,8 @@ export async function restartGameSession(slug: string, amount?: number, category
     data: {
       questions: JSON.stringify(questions),
       current_question: 0,
-      score: 0
+      score: 0,
+      joker_count: 2,
     }
   })
   return convertToGameSession(res)

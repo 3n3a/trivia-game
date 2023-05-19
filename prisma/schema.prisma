@@ -15,4 +15,5 @@ model GameSession {
     current_question Int    @default(0)
     category_id      Int
     amount           Int
+    joker_count      Int    @default(0)
 }

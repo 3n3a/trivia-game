@@ -1,8 +1,9 @@
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertIcon,
   Box,
+  Button,
   Card,
   CardBody,
   Center,
@@ -18,7 +19,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
-import { getGameSession, nextQuestion } from "~/models/game.server";
+import { deductJoker, getGameSession, nextQuestion } from "~/models/game.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const slug = params.slug;
@@ -48,8 +49,13 @@ export const action = async ({ params, request }: ActionArgs) => {
 
     const formData = await request.formData();
     const answer = String(formData.get("answer"));
-    const isCorrect =
+    let isCorrect =
       session.questions[session.current_question].correct_answer === answer;
+
+    if (answer === "use-joker") {
+      isCorrect = true
+      await deductJoker(slug)
+    }
 
     const updatedSession = await nextQuestion(slug, isCorrect);
     if (!updatedSession) {
@@ -92,7 +98,7 @@ const Play = () => {
         maxW="md"
         h="95vh"
         paddingTop={16}
-        templateRows="1fr 5fr 3fr 5fr"
+        templateRows="1fr 5fr 2fr 5fr 1fr"
         gap={3}
       >
         <GridItem>
@@ -164,7 +170,7 @@ const Play = () => {
                     padding={4}
                     borderRadius={6}
                     _hover={{
-                      backgroundColor: "blue.600"
+                      backgroundColor: "blue.600",
                     }}
                   >
                     <Text
@@ -181,6 +187,21 @@ const Play = () => {
               ))}
             </VStack>
           </VStack>
+        </GridItem>
+        <GridItem>
+          <Button
+            hidden={gameSession.joker_count <= 0}
+            type="submit"
+            name="answer"
+            value="use-joker"
+            w="full"
+            size="lg"
+            colorScheme="pink"
+            leftIcon={<StarIcon />}
+            iconSpacing={4}
+          >
+            <Text pt="1">Joker ({gameSession.joker_count})</Text>
+          </Button>
         </GridItem>
       </Grid>
     </Form>
