@@ -24,6 +24,42 @@ Please note that when adding Chakra UI to a TypeScript project, a minimum TypeSc
     npm run dev
     ```
 
+### Prisma Schema Change
+
+1. Start Postgres Dev Db
+
+    ```sh
+    docker compose -f docker-compose.dev.yml up
+    ```
+
+2. Run migration command
+
+    ```sh
+    npx prisma migrate dev
+    ```
+
+### Integration DockerCompose
+
+1. Run the thing
+
+    ```sh
+    docker compose -f docker-compose.int.yml up
+    ```
+
+### Production DockerCompose
+
+1. Configure the Environment
+
+    ```sh
+    echo "DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<db>" > .env.prod
+    ```
+
+2. Run the App
+
+    ```sh
+    docker compose up -d
+    ```
+
 ## Related Links
 
 * [Chakra UI](https://chakra-ui.com/guides/getting-started/remix-guide)
