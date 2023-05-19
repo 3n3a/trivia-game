@@ -8,7 +8,7 @@
 - [ ] Create Joker Button, Skip Question and Add a Point
 - [x] Fix: Question overflowing Box
 - [x] Fix: Answers disappeearing
-- [ ] Fix: Add Exit Button on Game Screen
+- [x] Fix: Add Exit Button on Game Screen
 - [x] Fix: Add Question Counter on Game Screen
 - [x] Fix: Save the Users Preferences for Game Options
   - [x] Fix: Add Restart Button to Finished Screen (with same options)

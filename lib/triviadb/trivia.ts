@@ -1,6 +1,5 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { URLSearchParams } from 'url';
 
 enum ResponseCode {
     Success = 0,

@@ -67,7 +67,7 @@ const Index = () => {
             </FormControl>
           </VStack>
           <Box>
-            <Button type="submit" pt={1} bgColor="tomato" size="lg" width="full" isLoading={loadingGame}>
+            <Button type="submit" pt={1} colorScheme="teal" size="lg" width="full" isLoading={loadingGame} loadingText="Creating...">
               Spiel Starten
             </Button>
           </Box>

@@ -1,11 +1,15 @@
+import { CloseIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertIcon,
   Box,
-  Button,
+  Card,
+  CardBody,
   Center,
   Container,
-  Input,
+  Grid,
+  GridItem,
+  IconButton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -13,7 +17,7 @@ import {
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
 import { getGameSession, nextQuestion } from "~/models/game.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
@@ -83,41 +87,102 @@ const Play = () => {
 
   return (
     <Form method="post">
-      <Container maxW="md" height="95vh" paddingTop={16}>
-        <Center>
-          <Text fontSize="xl">
-            {gameSession.current_question + 1}/{gameSession.amount}
-          </Text>{" "}
-        </Center>
-        {gameSession.hasOwnProperty("message") ? (
-          <Alert status={gameSession.message.is_correct ? "success" : "error"}>
-            <AlertIcon />
-            {gameSession.message.text}
-          </Alert>
-        ) : null}
-        <VStack height="full" align="stretch" justifyContent="space-evenly">
-          <Center
-            bgColor="gray.200"
-            borderRadius="xl"
-            minHeight="64"
-            paddingX="10"
-            paddingY="20"
-          >
-            <Text fontSize="3xl" overflowWrap="anywhere">
-              {decodeURIComponent(activeQuestion.question)}
-            </Text>
-          </Center>
-          <VStack align="stretch" justifyContent="space-evenly" spacing="4">
-            {activeQuestion.answers!.map((q: any) => (
-              <Button key={q} size="lg" type="submit" name="answer" value={q}>
-                <Text width="full" textOverflow="ellipsis" overflow="clip">
-                  {decodeURIComponent(q)}
+      <Grid
+        as={Container}
+        maxW="md"
+        h="95vh"
+        paddingTop={16}
+        templateRows="1fr 5fr 3fr 5fr"
+        gap={3}
+      >
+        <GridItem>
+          <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+            <GridItem></GridItem>
+            <GridItem>
+              <Center h="full">
+                <Text fontSize="xl">
+                  {gameSession.current_question + 1}/{gameSession.amount}
                 </Text>
-              </Button>
-            ))}
+              </Center>
+            </GridItem>
+            <GridItem>
+              <Center h="full" justifyContent="end">
+                <IconButton
+                  as={Link}
+                  to="/"
+                  aria-label="Spiel Beenden"
+                  icon={<CloseIcon />}
+                  colorScheme="red"
+                >
+                  Spiel Beenden
+                </IconButton>
+              </Center>
+            </GridItem>
+          </Grid>
+        </GridItem>
+        <GridItem>
+          <VStack
+            spacing={8}
+            height="full"
+            align="stretch"
+            justifyContent="space-between"
+          >
+            <Box h="20" py="10">
+              {gameSession.hasOwnProperty("message") ? (
+                <Alert
+                  status={gameSession.message.is_correct ? "success" : "error"}
+                >
+                  <AlertIcon />
+                  {gameSession.message.text}
+                </Alert>
+              ) : null}
+            </Box>
+            <Card>
+              <CardBody>
+                <Text fontSize="3xl" overflowWrap="anywhere">
+                  {decodeURIComponent(activeQuestion.question)}
+                </Text>
+              </CardBody>
+            </Card>
           </VStack>
-        </VStack>
-      </Container>
+        </GridItem>
+        <GridItem></GridItem>
+        <GridItem>
+          <VStack
+            height="full"
+            align="stretch"
+            justifyContent="flex-start"
+            maxW="md"
+          >
+            <VStack align="stretch" justifyContent="space-evenly" spacing="4">
+              {activeQuestion.answers!.map((q: any) => (
+                <button key={q} type="submit" name="answer" value={q}>
+                  <Box
+                    w="full"
+                    bgColor="blue.500"
+                    color="white"
+                    padding={4}
+                    borderRadius={6}
+                    _hover={{
+                      backgroundColor: "blue.600"
+                    }}
+                  >
+                    <Text
+                      wordBreak="break-all"
+                      inlineSize="full"
+                      overflow="hidden"
+                      fontSize="lg"
+                      fontWeight="semibold"
+                    >
+                      {decodeURIComponent(q)}
+                    </Text>
+                  </Box>
+                </button>
+              ))}
+            </VStack>
+          </VStack>
+        </GridItem>
+      </Grid>
     </Form>
   );
 };
