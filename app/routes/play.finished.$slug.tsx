@@ -44,13 +44,7 @@ const Finsihed = () => {
             <Text fontSize="xl">Deine Punktzahl:</Text>
           </Box>
           <Box fontSize={50} justifySelf="center">
-            {loaderData.score}/{loaderData.questions_count} Fragen
-          </Box>
-          <Box w="100%">
-            <Text fontSize="xl">Prozent aller Fragen:</Text>
-          </Box>
-          <Box fontSize={50} justifySelf="center">
-            {loaderData.percentage}%
+            {loaderData.score} Punkte
           </Box>
         </VStack>
         <VStack w="100%" spacing={4}>

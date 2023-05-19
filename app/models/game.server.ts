@@ -1,5 +1,5 @@
 import TriviaDb from "lib/triviadb";
-import type { Question } from "lib/triviadb/trivia";
+import { Question, QuestionDifficulty } from "lib/triviadb/trivia";
 
 import { prisma } from "~/db.server";
 
@@ -37,7 +37,21 @@ export async function createGameSession(amount: number, categoryId: number) {
   })
 }
 
-export async function nextQuestion(slug: string, wasCorrect: boolean) {
+export async function nextQuestion(slug: string, wasCorrect: boolean, difficulty: QuestionDifficulty) {
+  let points = 1
+  switch (difficulty) {
+    case QuestionDifficulty.Medium:
+      points = 2
+      break;
+  
+    case QuestionDifficulty.Hard:
+      points = 3
+      break;
+
+    default:
+      points = 1
+      break;
+  }
   const res = await prisma.gameSession.update({
     where: {
       slug
@@ -47,7 +61,7 @@ export async function nextQuestion(slug: string, wasCorrect: boolean) {
         increment: 1
       },
       score: {
-        increment: wasCorrect ? 1 : 0
+        increment: wasCorrect ? points : 0
       }
     }
   })
