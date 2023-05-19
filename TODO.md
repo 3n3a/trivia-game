@@ -5,7 +5,7 @@
 - [x] Create the Backend implementation for Game Session
 - [x] Create the Question getting / checking on Backend
 - [x] Create Finished Screen
-- [ ] Create Joker Button, Skip Question and Add a Point
+- [x] Create Joker Button, Skip Question and Add a Point
 - [x] Fix: Question overflowing Box
 - [x] Fix: Answers disappeearing
 - [x] Fix: Add Exit Button on Game Screen
