@@ -38,7 +38,7 @@ Please note that when adding Chakra UI to a TypeScript project, a minimum TypeSc
     npx prisma migrate dev
     ```
 
-### Integration DockerCompose
+## Integration
 
 1. Run the thing
 
@@ -46,15 +46,27 @@ Please note that when adding Chakra UI to a TypeScript project, a minimum TypeSc
     docker compose -f docker-compose.int.yml up
     ```
 
-### Production DockerCompose
+## Production
 
-1. Configure the Environment
+1. Build Image
+
+    ```sh
+    docker build -t 3n3a/trivia-game:1.0.0 .
+    ```
+
+2. Publish Image to Docker Hub
+
+    ```sh
+    docker push 3n3a/trivia-game:1.0.0
+    ```
+
+3. Configure the Environment
 
     ```sh
     echo "DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<db>" > .env.prod
     ```
 
-2. Run the App
+4. Run the App
 
     ```sh
     docker compose up -d
