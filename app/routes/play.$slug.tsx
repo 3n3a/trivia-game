@@ -19,6 +19,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import { deductJoker, getGameSession, nextQuestion } from "~/models/game.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
@@ -91,6 +92,8 @@ const Play = () => {
   const gameSession: any = actionData ?? loaderData;
   const activeQuestion = gameSession.questions[gameSession.current_question];
 
+  const [isEndGame, setIsEndGame] = useState(false);
+
   return (
     <Form method="post">
       <Grid
@@ -114,6 +117,8 @@ const Play = () => {
             <GridItem>
               <Center h="full" justifyContent="end">
                 <IconButton
+                  isLoading={isEndGame}
+                  onClick={() => setIsEndGame(true)}
                   as={Link}
                   to="/"
                   aria-label="Spiel Beenden"
